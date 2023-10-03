@@ -64,7 +64,6 @@ class Lembretes:
         self.con.commit()
 
 #Area de testes
-
 #lembretes = Lembretes()
 #lembretes.adicionar_lembrete('O TRESTE', 'Tudo SENDO free fire')
 #lembretes.editar_lembrete('O TESTE', novaDesc='Tudo sendo CS')
