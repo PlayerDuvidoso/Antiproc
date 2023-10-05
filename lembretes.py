@@ -53,7 +53,7 @@ class Lembretes:
         if not id: return ('Lembrete não encontrado!','',self.data_padrao.strftime(r"%Y-%m-%d %H:%M:%S.%f"),0,0)
 
         titulo, desc, data, repetir, periodo = self.cur.execute("SELECT titulo, desc, data, repetir, periodo FROM lembretes WHERE id=?", (id,)).fetchone()
-        data = datetime.datetime.strptime(data, r"%Y-%m-%d %H:%M:%S.%f")
+        data = datetime.datetime.strptime(data, r"%Y-%m-%d %H:%M:%S.%f").strftime(r"%d/%m/%Y - %H:%M")
         return (titulo, desc, data, repetir, periodo)
     
     def deletar_lembrete(self, tituloid):
@@ -77,7 +77,7 @@ class Lembretes:
 
 #   -----   Area de testes  -----
 
-lembretes = Lembretes()
+#lembretes = Lembretes()
 #lembretes.adicionar_lembrete('O TRESTE', 'Tudo SENDO free fire')
 #lembretes.editar_lembrete('O TESTE', novaDesc='Tudo sendo CS')
 #lembrete = lembretes.ler_lembrete('O TILTE DA VIDA 2')
@@ -87,7 +87,7 @@ lembretes = Lembretes()
 #    Em: {lembrete[2].strftime(r"%d/%m/%Y - %H:%M")}
 #""")
 #lembretes.deletar_lembrete('O TILTE DA VIDA')
-todos_lembretes = lembretes.ler_lembrete(todos=True)
+#todos_lembretes = lembretes.ler_lembrete(todos=True)
 
-for lembrete in todos_lembretes:
-    print(lembrete[0], ' | ', lembrete[2])
+#for lembrete in todos_lembretes:
+#    print(lembrete, ' | ', lembrete[2])
