@@ -37,9 +37,21 @@ class Lembretes:
         self.cur.execute("INSERT INTO lembretes VALUES(?, ?, ?, ?, ?, ?)", (id, titulo, desc, data, repetir, periodo,))
         self.con.commit()
 
-    def ler_lembrete(self, tituloid):
+    def ler_lembrete(self, tituloid=str(), todos=False):
+        if todos:
+            todos_lembretes = self.cur.execute("SELECT titulo, desc, data, repetir, periodo FROM lembretes").fetchall()
+
+            for index, lembrete in enumerate(todos_lembretes):
+                lembrete_lista = list(lembrete)
+                lembrete_lista[2] = datetime.datetime.strptime(lembrete_lista[2], r"%Y-%m-%d %H:%M:%S.%f").strftime(r"%d/%m/%Y - %H:%M")
+                lembrete = tuple(lembrete_lista)
+                todos_lembretes[index] = lembrete
+
+            return todos_lembretes
+
         id = self.id_do_titulo(tituloid)
-        if not id: return ('Lembrete não encontrado!','',self.data_padrao,0,0)
+        if not id: return ('Lembrete não encontrado!','',self.data_padrao.strftime(r"%Y-%m-%d %H:%M:%S.%f"),0,0)
+
         titulo, desc, data, repetir, periodo = self.cur.execute("SELECT titulo, desc, data, repetir, periodo FROM lembretes WHERE id=?", (id,)).fetchone()
         data = datetime.datetime.strptime(data, r"%Y-%m-%d %H:%M:%S.%f")
         return (titulo, desc, data, repetir, periodo)
@@ -63,8 +75,9 @@ class Lembretes:
         self.cur.execute("UPDATE lembretes SET titulo=?, desc=?, data=?, repetir=?, periodo=? WHERE id=?", (novoTitulo, novaDesc, novaData, novoRepetir, novoPeriodo, id))
         self.con.commit()
 
-#Area de testes
-#lembretes = Lembretes()
+#   -----   Area de testes  -----
+
+lembretes = Lembretes()
 #lembretes.adicionar_lembrete('O TRESTE', 'Tudo SENDO free fire')
 #lembretes.editar_lembrete('O TESTE', novaDesc='Tudo sendo CS')
 #lembrete = lembretes.ler_lembrete('O TILTE DA VIDA 2')
@@ -74,3 +87,7 @@ class Lembretes:
 #    Em: {lembrete[2].strftime(r"%d/%m/%Y - %H:%M")}
 #""")
 #lembretes.deletar_lembrete('O TILTE DA VIDA')
+todos_lembretes = lembretes.ler_lembrete(todos=True)
+
+for lembrete in todos_lembretes:
+    print(lembrete[0], ' | ', lembrete[2])
